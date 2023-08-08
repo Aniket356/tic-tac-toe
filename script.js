@@ -37,7 +37,9 @@ const gameBoard = (() => {
 
 const gameManager = (() => {
     let currentTurn = player1;
+    const currentTurnDisplay = document.querySelector('.current-turn');
     const resultDisplay = document.querySelector('.result-display');
+    currentTurnDisplay.textContent = `${currentTurn.name}, make your move.`
 
     const startGame = () => {
         const cells = document.querySelectorAll('.cell');
@@ -57,8 +59,8 @@ const gameManager = (() => {
             gameBoard.renderContents();
 
             checkForGameOver();
-
             currentTurn = currentTurn === player1 ? player2 : player1;
+            currentTurnDisplay.textContent = `${currentTurn.name}, make your move.`
         }
     }
 

@@ -37,6 +37,10 @@ h1 {
     cursor: pointer;
 }
 
+.cell:hover {
+    background-color: #c2c2c2;
+}
+
 .result-display {
     font-size: 3.3rem;
     font-weight: bold;
@@ -51,10 +55,16 @@ h1 {
     cursor: pointer;
     font-size: 1.1rem;
     font-weight: bold;
+    margin-bottom: 0.7em;
 }
 
 #restart-btn:hover {
     background: #1a1515;
     color: white;
     border: 2px solid white;
+}
+
+.current-turn {
+    font-weight: bold;
+    font-size: 1.5rem;
 }
