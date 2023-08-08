@@ -5,11 +5,15 @@ const player = (symbol, name) => {
     }
 }
 
-const player1 = player('x', 'Player 1');
-const player2 = player('o', 'Player 2');
+const player1 = player('x', 'X');
+const player2 = player('o', 'O');
 
 const gameBoard = (() => {
     let gameBoardContents = ['', '', '', '', '', '', '', '', ''];
+
+    const getGameBoard = () => {
+        return gameBoardContents;
+    }
 
     const renderContents = () => {
         for(let i = 0; i < 9; i++){
@@ -18,85 +22,102 @@ const gameBoard = (() => {
         }
     }
 
+    const resetBoard = () => {
+        gameBoardContents = ['', '', '', '', '', '', '', '', ''];
+        renderContents();
+    }
+
     return {
-        gameBoardContents,
+        getGameBoard,
         renderContents,
+        resetBoard,
     };
 })();
 
 
 const gameManager = (() => {
     let currentTurn = player1;
-    let isGameOver = false;
+    const resultDisplay = document.querySelector('.result-display');
 
     const startGame = () => {
-        cells = document.querySelectorAll('.cell');
+        const cells = document.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.addEventListener('click', onCellClick)
         })
+
+        const restartBtn = document.querySelector('#restart-btn');
+        restartBtn.addEventListener('click', restartGame);
     }
 
     const onCellClick = (event) => {
         const cellNumber = event.target.getAttribute("data-number");
 
-        if(gameBoard.gameBoardContents[cellNumber-1] === ''){
+        if(gameBoard.getGameBoard()[cellNumber-1] === ''){
             makeMove(cellNumber)
             gameBoard.renderContents();
 
             checkForGameOver();
-            if(isGameOver) gameOver();
 
             currentTurn = currentTurn === player1 ? player2 : player1;
         }
     }
 
     const makeMove = (cellNumber) => {
-        gameBoard.gameBoardContents[cellNumber-1] = currentTurn.symbol;
+        gameBoard.getGameBoard()[cellNumber-1] = currentTurn.symbol;
     }
 
     const checkForGameOver = () => {
         for(let i = 0; i < 9; i+=3){
-            if(gameBoard.gameBoardContents[i] !== '' && 
-                gameBoard.gameBoardContents[i] === gameBoard.gameBoardContents[i+1] && gameBoard.gameBoardContents[i+1] === gameBoard.gameBoardContents[i+2]){
-                    console.log(`${currentTurn.name} wins!`);
-                    isGameOver = true;
+            if(gameBoard.getGameBoard()[i] !== '' && 
+                gameBoard.getGameBoard()[i] === gameBoard.getGameBoard()[i+1] && gameBoard.getGameBoard()[i+1] === gameBoard.getGameBoard()[i+2]){
+                    onGameOver(currentTurn, false)
                     return;
             }
         }
 
         for(let i = 0; i < 3; i++){
-            if(gameBoard.gameBoardContents[i] !== '' &&
-                gameBoard.gameBoardContents[i] === gameBoard.gameBoardContents[i+3] && gameBoard.gameBoardContents[i+3] === gameBoard.gameBoardContents[i+6]){
-                    console.log(`${currentTurn.name} wins!`);
-                    isGameOver = true;
+            if(gameBoard.getGameBoard()[i] !== '' &&
+                gameBoard.getGameBoard()[i] === gameBoard.getGameBoard()[i+3] && gameBoard.getGameBoard()[i+3] === gameBoard.getGameBoard()[i+6]){
+                    onGameOver(currentTurn, false)
                     return;
                 }
         }
 
-        if(gameBoard.gameBoardContents[0] !== '' && gameBoard.gameBoardContents[0] === gameBoard.gameBoardContents[4] && gameBoard.gameBoardContents[4] === gameBoard.gameBoardContents[8]){
-            console.log(`${currentTurn.name} wins!`);
-            isGameOver = true;
+        if(gameBoard.getGameBoard()[0] !== '' && gameBoard.getGameBoard()[0] === gameBoard.getGameBoard()[4] && gameBoard.getGameBoard()[4] === gameBoard.getGameBoard()[8]){
+            onGameOver(currentTurn, false)
             return;
         }
 
-        if(gameBoard.gameBoardContents[2] !== '' && gameBoard.gameBoardContents[2] === gameBoard.gameBoardContents[4] && gameBoard.gameBoardContents[4] === gameBoard.gameBoardContents[6]) {
-            console.log(`${currentTurn.name} wins!`);
-            isGameOver = true;
+        if(gameBoard.getGameBoard()[2] !== '' && gameBoard.getGameBoard()[2] === gameBoard.getGameBoard()[4] && gameBoard.getGameBoard()[4] === gameBoard.getGameBoard()[6]) {
+            onGameOver(currentTurn, false)
             return;
         }
 
-        if(!gameBoard.gameBoardContents.includes('')){
+        if(!gameBoard.getGameBoard().includes('')){
             console.log("It's a tie.")
-            isGameOver = true;
+            onGameOver(currentTurn, true)
             return;
         }
     }
 
-    const gameOver = () => {
+    const onGameOver = (currentTurn, isATie) => {
         cells = document.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.removeEventListener('click', onCellClick)
         })
+
+        if(isATie){
+            resultDisplay.textContent = "It's a tie";
+            return;
+        }
+        resultDisplay.textContent = `${currentTurn.name} wins!`;
+    }
+
+    const restartGame = () => {
+        gameBoard.resetBoard();
+        resultDisplay.textContent = '';
+
+        startGame();
     }
 
     return {

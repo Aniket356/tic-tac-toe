@@ -9,13 +9,19 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1 {
+    font-size: 3.7rem;
+    margin: 0.7em 0;
 }
 
 .game-board {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     border: 1px solid black;
+    margin-bottom: 0.7em;
 }
 
 .cell {
@@ -25,9 +31,30 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
+    font-size: 3.7rem;
     font-weight: bold;
     text-transform: uppercase;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     cursor: pointer;
+}
+
+.result-display {
+    font-size: 3.3rem;
+    font-weight: bold;
+    margin-bottom: 0.3em;
+}
+
+#restart-btn {
+    padding: 0.3em 0.5em;
+    background: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+#restart-btn:hover {
+    background: #1a1515;
+    color: white;
+    border: 2px solid white;
 }
